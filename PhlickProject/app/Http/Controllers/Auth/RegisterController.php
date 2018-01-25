@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\UserDAO;
+use App\SecurityService;
+use App\SecurityDAO;
+use App\Utility;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -39,33 +42,54 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    function register(Request $request){
+        $email = $request->input('email');
+        $pass = $request->input('pass');
+        $rePass = $request->input('repass');
+        $fName = $request->input('first_name');
+        $lName = $request->input('last_name');
+        
+        $user = new UserDAO();
+        $func = new Utility();
+        
+        if($this->validator($email, $pass, $rePass)){
+            if($user->register($email, $pass, $lName, $fName)){
+                $func->createMsg("Account created!", 1);
+                return view('Login');
+            }
+        }
+        else{
+            $func->createMsg("Login failed!", 1);
+            return view('Register');
+        }
+    }
     /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator($email, $pass, $rePass)
     {
-        return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-    }
-
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\User
-     */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        $secServ = new SecurityService();
+        $secDAO = new SecurityDAO();
+        $func = new Utility();
+                
+        if(!$secServ->validateEmail($email)){
+            $func->createMsg("That is not a valid email!", 1);
+            return false;
+        }
+        else if(!$secServ->validatePassword(" ", $pass, $rePass)){
+            $func->createMsg("Your password does not meet the requirements!", 1);
+            return false;
+        }
+        else if(!$secDAO->checkExisting($email)){
+            $func->createMsg("That email is already taken!", 1);
+            return false;
+        }
+        else{
+            return true;
+        }
+        
     }
 }

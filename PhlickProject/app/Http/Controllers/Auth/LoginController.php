@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Utility;
+use App\SecurityDAO;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -35,5 +38,21 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+    
+    function login(Request $request){
+        $email = $request->input('email');
+        $pass = $request->input('pass');
+        
+        $secDAO = new SecurityDAO();
+        $func = new Utility();
+        
+        if(!$secDAO->comboCheck($email, $pass)){
+            $func->createMsg("Email/pass combo is incorrect!", 1);
+            return view('Login');
+        }
+        else{
+            echo "You've logged in!";
+        }
     }
 }
