@@ -38,3 +38,23 @@ Route::post('/register','Auth\RegisterController@register');
 
 Route::post('/login','Auth\LoginController@login');
 
+Route::post('/name', 'EditController@changeName');
+
+Route::post('/email', 'EditController@changeEmail');
+
+Route::post('/password', 'EditController@changePass');
+
+Route::post('/dob', 'EditController@changeDOB');
+
+Route::post('/gender', 'EditController@changeGender');
+
+Route::post('/ethnicity', 'EditController@changeEthnicity');
+
+Route::post('/location', 'EditController@changeLocation');
+
+Route::post('/number', 'EditController@changeNumber');
+
+Route::post('/education', 'EditController@changeEducation');
+
+Route::post('/job', 'EditController@changeJob');
+

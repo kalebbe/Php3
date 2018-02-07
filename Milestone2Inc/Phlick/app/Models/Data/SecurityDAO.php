@@ -37,6 +37,7 @@ class SecurityDAO extends Model{
             else{
                 $access = DB::table('users')->where('EMAIL', $email)->value('ACCESS');
                 Session::put('ACCESS', $access);
+                Session::put('EMAIL', $email);
                 return true;
             }
         }

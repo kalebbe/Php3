@@ -16,9 +16,12 @@ class UserDAO extends Model
         $this->sql = "INSERT INTO users (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD)" .
             " VALUES ('" . $fName . "', '" . $lName . "', '" . $email . "', '" .
             $hashPass . "')";
-        
-        //Attempts to rexecute query and returns boolean
-        return DB::insert($this->sql);
-        
+
+        if(DB::insert($this->sql)){
+            $id = DB::table('users')->where('EMAIL', $email)->value('ID');
+            $sqlProf = "INSERT INTO profile (USER_ID) VALUE ('" . $id . "')";
+            return db::insert($sqlProf);
+        }
+        else return false;
     }
 }

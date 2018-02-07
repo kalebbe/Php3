@@ -14,7 +14,7 @@
                 {{ Form::text('last_name', NULL, array('class' => 'form-control', 'placeholder' => 'Last Name', 'required' => 'required')) }}
             </div>
             <div class="form-group">
-                {{ Form::text('email', NULL, array('class' => 'form-control', 'placeholder' => 'Email', 'required' => 'required')) }}
+                {{ Form::email('email', NULL, array('class' => 'form-control', 'placeholder' => 'Email', 'required' => 'required')) }}
             </div>
             <div class="form-group">
                 {{ Form::password('pass', array('class' => 'form-control', 'placeholder' => 'Password', 'required' => 'required')) }}
